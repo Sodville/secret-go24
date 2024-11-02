@@ -15,27 +15,6 @@ pub const Layer = struct {
 
     tilewidth: u8 = 0,
     tileheight: u8 = 0,
-    tiles: []Tile = undefined,
-
-    fn prepare_tiles(self: *Layer, allocator: *const std.mem.Allocator, tile_width: u8, tile_height: u8) ![]Tile {
-        var arr = std.ArrayList(Tile).init(allocator.*);
-        defer arr.deinit();
-        for (self.data, 0..self.data.len) |id, index| {
-            const index_u32: u32 = @intCast(index);
-            const y: u32 = @as(u32, index_u32 / self.width);
-            const x: u32 = @as(u32, index_u32 % self.width);
-            _ = try arr.append(.{
-                .x = x * tile_width,
-                .y = y * tile_height,
-                .width = tile_width,
-                .height = tile_height,
-                .id = id,
-            });
-        }
-
-        const slice = try arr.toOwnedSlice();
-        return slice;
-    }
 };
 
 pub const Object = struct {
@@ -183,7 +162,6 @@ pub fn load_map(path: []const u8) !Map {
         }
 
         layer.data = try datas.toOwnedSlice();
-        layer.tiles = try layer.prepare_tiles(&allocator, map.tilewidth, map.tileheight);
 
         _ = try layers.append(layer);
     }
