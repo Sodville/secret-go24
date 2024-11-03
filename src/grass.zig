@@ -4,8 +4,6 @@ const std = @import("std");
 const util = @import("util.zig");
 const math = std.math;
 
-const DECAY_FACTOR = 20;
-
 pub const Grass = struct {
     x: u32,
     y: u32,
@@ -28,7 +26,7 @@ pub const Grass = struct {
 };
 
 pub const GrassManager = struct {
-    grass: [1024]Grass = undefined,
+    grass: [10240]Grass = undefined,
     global_rotation: f32,
 
     len: u16,
