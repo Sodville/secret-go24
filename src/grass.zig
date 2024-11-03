@@ -1,18 +1,10 @@
 const rl = @import("raylib");
 const std = @import("std");
 
+const util = @import("util.zig");
 const math = std.math;
 
 const DECAY_FACTOR = 20;
-
-fn easeInOutElastic(x: f32) f32 {
-    const c5 = (2 * math.pi) / 4.5;
-
-    return if (x == 0.0) 0.0 else if (x == 1.0) 1.0 else if (x < 0.5)
-        -((math.pow(f32, 2, 20 * x - 10) * math.sin((20 * x - 11.125) * c5)) / 2)
-    else
-        ((math.pow(f32, 2, -20 * x + 10) * math.sin((20 * x - 11.125) * c5)) / 2) + 1.0;
-}
 
 pub const Grass = struct {
     x: u32,
@@ -69,7 +61,7 @@ pub const GrassManager = struct {
         for (0..self.len) |i| {
             var grass: *Grass = &self.grass[i];
             const rot_offset: f32 = @floatFromInt(grass.x);
-            const e = easeInOutElastic(math.sin((t - rot_offset) / 100));
+            const e = util.ease_in_out_elastic(math.sin((t - rot_offset) / 100));
             const rot = (e) * 55;
             grass.update(rot + math.sin((t - rot_offset) / 45) * 15);
         }
