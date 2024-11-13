@@ -1,5 +1,6 @@
 const std = @import("std");
 const xml = @import("xml.zig");
+const rl = @import("raylib");
 
 // this entire file can be refactored in the future to use more type reflection
 // definatly possible to do some magic metaprogramming to build these types 'easier'
@@ -23,6 +24,14 @@ pub const Object = struct {
     y: u32 = 0,
     height: ?u32 = 0,
     width: ?u32 = 0,
+
+    pub fn to_rect(self: Object) rl.Rectangle {
+        const f_x: f32 = @floatFromInt(self.x);
+        const f_y: f32 = @floatFromInt(self.y);
+        const f_width: f32 = @floatFromInt(self.width.?);
+        const f_height: f32 = @floatFromInt(self.height.?);
+        return rl.Rectangle.init(f_x, f_y, f_width, f_height);
+    }
 };
 
 pub const ObjectGroup = struct {
@@ -35,6 +44,10 @@ pub const ObjectIterator = struct {
     items: []Object,
     group: *ObjectGroup,
     i: usize,
+
+    pub fn reset(self: *ObjectIterator) void {
+        self.i = 0;
+    }
 
     pub fn next(self: *ObjectIterator) ?*Object {
         if (self.i < self.items.len) {
