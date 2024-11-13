@@ -1,4 +1,5 @@
 const std = @import("std");
+const rl = @import("raylib");
 
 const math = std.math;
 
@@ -9,4 +10,9 @@ pub fn ease_in_out_elastic(x: f32) f32 {
         -((math.pow(f32, 2, 20 * x - 10) * math.sin((20 * x - 11.125) * c5)) / 2)
     else
         ((math.pow(f32, 2, -20 * x + 10) * math.sin((20 * x - 11.125) * c5)) / 2) + 1.0;
+}
+
+pub fn get_relative_mouse_position() rl.Vector2 {
+    const mouse_pos = rl.getMousePosition();
+    return mouse_pos.divide(rl.Vector2.init(800 / 400, 450 / 225));
 }
