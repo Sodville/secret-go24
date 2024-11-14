@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="10">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="23">
  <tileset firstgid="1" source="temp_tileset-Sheet.tsx"/>
  <layer id="1" name="Tile Layer 1" width="30" height="20">
   <data encoding="csv">
@@ -34,5 +34,24 @@
   <object id="6" x="240" y="208" width="96" height="32"/>
   <object id="7" x="304" y="240" width="32" height="64"/>
   <object id="9" x="0" y="144" width="144" height="32"/>
+ </objectgroup>
+ <objectgroup id="3" name="grass">
+  <object id="11" x="160" y="144" width="160"/>
+  <object id="12" x="352" y="144" width="32"/>
+  <object id="15" x="16" y="144" width="32"/>
+  <object id="16" x="80" y="144" width="32"/>
+  <object id="17" x="176" y="64" width="96"/>
+  <object id="18" x="240" y="208" width="48"/>
+ </objectgroup>
+ <objectgroup id="4" name="vines">
+  <object id="19" x="240" y="96">
+   <polyline points="0,0 -32,16 -64,16"/>
+  </object>
+  <object id="21" x="256" y="96">
+   <polyline points="0,0 32,0 64,16 96,16"/>
+  </object>
+  <object id="22" x="351.509" y="151.282">
+   <polyline points="0,0 -30.1576,6.92141 -0.988773,18.2923"/>
+  </object>
  </objectgroup>
 </map>
