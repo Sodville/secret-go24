@@ -2,6 +2,35 @@ const rl = @import("raylib");
 const std = @import("std");
 const math = std.math;
 
+pub const VineManager = struct {
+    vines: [1000]Vine = undefined,
+    len: u32,
+
+    pub fn init() VineManager {
+        return .{
+            .len = 0,
+        };
+    }
+
+    pub fn add_vine(self: *VineManager, vine: Vine) void {
+        self.vines[self.len] = vine;
+        self.len += 1;
+    }
+
+    pub fn update(self: *VineManager) void {
+        for (0..self.len) |i| {
+            var vine: *Vine = &self.vines[i];
+            vine.update(1);
+        }
+    }
+    pub fn draw(self: *VineManager) void {
+        for (0..self.len) |i| {
+            var vine: *Vine = &self.vines[i];
+            vine.draw();
+        }
+    }
+};
+
 pub const Point = struct {
     position: rl.Vector2,
     previous_position: rl.Vector2,
