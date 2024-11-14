@@ -2,6 +2,7 @@ const rl = @import("raylib");
 const std = @import("std");
 const tmx = @import("tmx.zig");
 const lvl = @import("level.zig");
+const util = @import("util.zig");
 const grass = @import("grass.zig");
 const vn = @import("vine.zig");
 
@@ -58,6 +59,8 @@ pub fn main() !void {
         update();
         gm.update(t);
         vm.update();
+        vm.apply_localized_force(util.get_relative_mouse_position(), 16);
+        gm.apply_force(util.get_relative_mouse_position(), 16);
         draw(target, &level);
 
         t += 1;
