@@ -22,6 +22,11 @@ pub const Grass = struct {
 
     pub fn update(self: *Grass, rotation: f32) void {
         self.rotation = self.base_rotation + rotation;
+        self.base_rotation -= self.base_rotation / 20;
+    }
+
+    pub fn to_vec(self: *Grass) rl.Vector2 {
+        return rl.Vector2.init(@floatFromInt(self.x), @floatFromInt(self.y));
     }
 };
 
@@ -44,10 +49,17 @@ pub const GrassManager = struct {
         };
     }
 
-    pub fn apply_force(self: *GrassManager, x: u32, y: u32) void {
-        _ = self; // autofix
-        _ = x; // autofix
-        _ = y; // autofix
+    pub fn apply_force(self: *GrassManager, position: rl.Vector2, radius: f32) void {
+        const max_rotation_degrees = 55;
+        for (0..self.len) |i| {
+            var grass = &self.grass[i];
+            var grass_vec = grass.to_vec();
+            if (grass_vec.distance(position) <= radius) {
+                const delta = grass_vec.subtract(position);
+                const clamped_dist = if (delta.x > 0) @max(delta.x - delta.y, 1) else @min(delta.x + delta.y, -1);
+                grass.base_rotation = max_rotation_degrees / clamped_dist;
+            }
+        }
     }
 
     pub fn add_grass(self: *GrassManager, grass: Grass) void {

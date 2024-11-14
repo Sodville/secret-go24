@@ -29,6 +29,13 @@ pub const VineManager = struct {
             vine.draw();
         }
     }
+
+    pub fn apply_localized_force(self: *VineManager, position: rl.Vector2, radius: f32) void {
+        for (0..self.len) |i| {
+            const vine = &self.vines[i];
+            vine.apply_localized_force(position, radius);
+        }
+    }
 };
 
 pub const Point = struct {
@@ -132,7 +139,7 @@ pub const Vine = struct {
 
     pub fn draw(self: *Vine) void {
         for (0..self.num_points - 1) |i| {
-            rl.drawLineV(self.points[i].position, self.points[i + 1].position, rl.Color.green);
+            rl.drawLineEx(self.points[i].position, self.points[i + 1].position, 1.8, rl.Color.init(0x78, 0x83, 0x74, 0xff));
         }
     }
 
@@ -146,6 +153,7 @@ pub const Vine = struct {
             }
         }
     }
+
     pub fn apply_global_force(self: *Vine, position: rl.Vector2) void {
         for (0..self.num_points) |i| {
             const p1 = &self.points[i];
