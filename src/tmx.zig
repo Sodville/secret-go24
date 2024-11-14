@@ -18,12 +18,22 @@ pub const Layer = struct {
     tileheight: u8 = 0,
 };
 
+pub const PolylinePoint = struct {
+    x: f32,
+    y: f32,
+};
+
+pub const Polyline = struct {
+    points: []PolylinePoint,
+};
+
 pub const Object = struct {
     id: u8 = 0,
     x: u32 = 0,
     y: u32 = 0,
     height: ?u32 = 0,
     width: ?u32 = 0,
+    polylines: ?[]Polyline = null,
 
     pub fn to_rect(self: Object) rl.Rectangle {
         const f_x: f32 = @floatFromInt(self.x);
@@ -199,15 +209,38 @@ pub fn load_map(path: []const u8) !Map {
         var copy = object_group_tag.elements();
         while (copy.next()) |child| {
             var object = Object{};
+
+            var polylines = std.ArrayList(Polyline).init(allocator);
+            defer polylines.deinit();
+            var child_elements = child.elements();
+            while (child_elements.next()) |polyline_tag| {
+                const data = polyline_tag.getAttribute("points") orelse "";
+                var it = std.mem.split(u8, data, " ");
+
+                var points = std.ArrayList(PolylinePoint).init(allocator);
+                defer points.deinit();
+
+                while (it.next()) |val| {
+                    var inner_it = std.mem.split(u8, val, ",");
+                    try points.append(PolylinePoint{
+                        .x = try std.fmt.parseFloat(f32, inner_it.next().?),
+                        .y = try std.fmt.parseFloat(f32, inner_it.next().?),
+                    });
+                }
+
+                try polylines.append(Polyline{ .points = try points.toOwnedSlice() });
+            }
+
+            object.polylines = try polylines.toOwnedSlice();
             object.id = try parse_attr_u8(child, "id");
 
             const x = check_attr(child, "x");
             if (x != null) {
-                object.x = try std.fmt.parseInt(u32, x.?, 10);
+                object.x = @intFromFloat(try std.fmt.parseFloat(f32, x.?));
             }
             const y = check_attr(child, "y");
             if (y != null) {
-                object.y = try std.fmt.parseInt(u32, y.?, 10);
+                object.y = @intFromFloat(try std.fmt.parseFloat(f32, y.?));
             }
 
             const width = check_attr(child, "width");
